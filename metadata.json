@@ -1,5 +1,7 @@
 {
   "name": "AI Coding Tutor & Chatbot",
   "description": "An AI-powered coding tutor that explains errors and suggests fixes, and a general purpose chatbot for any questions. Get expert help on your code or chat with an AI assistant.",
-  "requestFramePermissions": []
+  "requestFramePermissions": [
+    "microphone"
+  ]
 }

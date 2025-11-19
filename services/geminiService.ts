@@ -21,17 +21,25 @@ Your response MUST include the following sections in this exact order:
 
 Analyze the following user input:`;
 
-export async function analyzeCodeError(userInput: string): Promise<AnalysisResult> {
+export async function analyzeCodeError(userInput: string, options: { isThinkingMode?: boolean } = {}): Promise<AnalysisResult> {
+  const { isThinkingMode = false } = options;
   // API key is automatically sourced from the environment
   const ai = new GoogleGenAI({ apiKey: process.env.API_KEY });
 
+  const model = isThinkingMode ? 'gemini-2.5-pro' : 'gemini-2.5-flash';
+  const config: any = {
+      tools: [{googleSearch: {}}],
+  };
+
+  if (isThinkingMode) {
+      config.thinkingConfig = { thinkingBudget: 32768 };
+  }
+
   try {
     const response = await ai.models.generateContent({
-        model: "gemini-2.5-flash",
+        model: model,
         contents: `${TUTOR_PROMPT}\n\n---\n\n${userInput}`,
-        config: {
-            tools: [{googleSearch: {}}],
-        },
+        config: config,
     });
 
     const text = response.text;
